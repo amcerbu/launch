@@ -25,14 +25,14 @@ def power(n = n):
 subsets = [power(k) for k in range(n + 1)]
 
 cutoff = n // 2 + 1 # for performance reasons we don't generate voicings of sets of size > 6
-voicings = [None for k in range(cutoff)]
+voicings = [None for k in range(n + 1)]
 
 # generate all permutations of (0,...,n-1)
 def permutations(n, voicings = voicings):
 	if n == 0:
 		voicings[n] = [()]
 	
-	if voicings[n] is None:
+	if n >= len(voicings) or voicings[n] is None:
 		voicings[n] = [p[:i] + (n-1,) + p[i:] for p in voicings[n-1] for i in range(n)]
 
 	return voicings[n]

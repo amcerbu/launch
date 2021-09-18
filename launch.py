@@ -1,5 +1,6 @@
 import mido
 import time
+from time import sleep
 import numpy as np
 import harmony
 from random import random
@@ -614,11 +615,17 @@ if 'Launchpad Pro MK3 LPProMK3 MIDI' in ports:
 if 'Scarlett 18i8 USB' in ports:
 	synth = 'Scarlett 18i8 USB'
 
+programmer = mido.Message('sysex', data = [0, 32, 41, 2, 14, 14, 1])
+ableton = mido.Message('sysex', data = [0, 32, 41, 2, 14, 14, 0])
+
 with mido.open_ioport(surface) as ioport, \
 	 mido.open_output(synth) as output:
 	try:
 		inst = Instrument(ioport, output)
+		ioport.send(programmer)
 		inst.display()
+		
+
 		for message in ioport:
 			# if message.type == 'note_on': print(message)
 			inst.process(message)
@@ -631,6 +638,8 @@ with mido.open_ioport(surface) as ioport, \
 		pass
 
 	inst.reset()
+	ioport.send(ableton)
+	
 
 '''
  - draw your own velocity curve
