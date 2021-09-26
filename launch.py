@@ -1,3 +1,4 @@
+import sys
 import mido
 import time
 from time import sleep
@@ -195,7 +196,7 @@ class Keyboard(Application):
 
 		self.history = []
 		self.historical = True
-		self.window = 5
+		self.window = 1
 		self.voicings = harmony.voicings
 
 		self.harmonizer = None
@@ -605,15 +606,19 @@ class Velocity(Application):
 			self.display[index - 1, 0 : jndex] = 9
 
 
-
 ports = mido.get_ioport_names()
 surface = None
 synth = None
 
-if 'Launchpad Pro MK3 LPProMK3 MIDI' in ports:
-	surface = 'Launchpad Pro MK3 LPProMK3 MIDI'
-if 'Scarlett 18i8 USB' in ports:
+surface = 'Launchpad Pro MK3 LPProMK3 MIDI'
+assert surface in ports
+
+if len(sys.argv) > 1:
+	synth = sys.argv[1]
+elif 'Scarlett 18i8 USB' in ports:
 	synth = 'Scarlett 18i8 USB'
+
+print('in: ' + str(surface) + ', out: ' + str(synth))
 
 programmer = mido.Message('sysex', data = [0, 32, 41, 2, 14, 14, 1])
 ableton = mido.Message('sysex', data = [0, 32, 41, 2, 14, 14, 0])
